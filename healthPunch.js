@@ -35,6 +35,7 @@ const handler = async () => {
     });
 }
 // 每天凌晨一点 执行一次 0 0 1 * * ?
-schedule.scheduleJob('*/5 * * * * ?',()=>{
+// 每五秒执行一次 */5 * * * * ?
+schedule.scheduleJob('0 0 1 * * ?',()=>{
     handler();
 })
