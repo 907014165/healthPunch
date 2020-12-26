@@ -27,7 +27,7 @@ async function sendEmail(toEmailUsers) {
         to: toEmailUsers.join(','), // list of receivers
         subject: "打卡成功", // Subject line
         text: "今日打卡成功", // plain text body
-        html: "<b>时刻提醒你是你今天是最优秀的！</b>", // html body
+        html: "<b>今天又是元气满满的一天！</b>", // html body
     });
 }
 
