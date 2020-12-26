@@ -2,8 +2,14 @@ const axios = require('axios');
 const schedule = require('node-schedule');
 const nodemailer = require('nodemailer');
 
-async function sendEmail() {
-    const toEmailUsers = ['ruanshouhuan@dataknown.cn', '907014165@qq.com'];
+const users = [
+    {
+        emails:['ruanshouhuan@dataknown.cn', '907014165@qq.com'],
+        name:'ruanshouhuan',
+    },
+]
+
+async function sendEmail(toEmailUsers) {
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: "smtp.qq.com",
@@ -19,12 +25,13 @@ async function sendEmail() {
     let info = await transporter.sendMail({
         from: '508951069@qq.com', // sender address
         to: toEmailUsers.join(','), // list of receivers
-        subject: "打卡成功 ✔", // Subject line
+        subject: "打卡成功", // Subject line
         text: "今日打卡成功", // plain text body
         html: "<b>时刻提醒你是你今天是最优秀的！</b>", // html body
     });
 }
-const handler = async () => {
+
+const punch = async (name,emails) => {
     /* 先获取cookie */
     const { headers } = await axios({
         method: 'get',
@@ -34,7 +41,7 @@ const handler = async () => {
     /* 打卡信息 */
     let daka = new URLSearchParams();
     const dakaEntity = {
-        userCode: 'ruanshouhuan',
+        userCode: name,
         state: 1,
         stateDesc: '',
         belongCity: '福州',
@@ -57,7 +64,11 @@ const handler = async () => {
         withCredentials: true,
         data: daka
     });
-    await sendEmail();
+    await sendEmail(emails);
+}
+
+const handler = async () =>{
+    await Promise.all(users.map(({name,emails}) => punch(name,emails)))
 }
 // 每天凌晨一点 执行一次 0 0 1 * * ?
 // 每五秒执行一次 */5 * * * * ?
